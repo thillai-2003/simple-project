@@ -1,6 +1,7 @@
+// simple-project/app/api/signup/route.ts
 import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/src/lib/prisma";
 
 export async function POST(req: any) {
   try {
@@ -11,13 +12,13 @@ export async function POST(req: any) {
     }
 
     // check user already exist
-    // const existing = await prisma.user.findUnique({
-    //   where: { email },
-    // });
+    const existing = await prisma.user.findUnique({
+      where: { email },
+    });
 
-    // if (existing) {
-    //   return NextResponse.json({ error: "User already exists" }, { status: 400 });
-    // }
+    if (existing) {
+      return NextResponse.json({ error: "User already exists" }, { status: 400 });
+    }
 
     // hash password
     const hashedPassword = await hash(password, 10);
